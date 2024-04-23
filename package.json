@@ -9,14 +9,15 @@
     "run": "npm run build && npx @google-cloud/functions-framework --target=updateGET",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prestart": "npm run build",
-    "gcp-build": "npm run build"
+    "gcp-build": "npx playwright install && npm run build"
   },
   "author": "",
-  "license": "ISC",
+  "license": "",
   "dependencies": {
     "@google-cloud/functions-framework": "^3.3.0",
     "@notionhq/client": "^2.2.15",
-    "jsdom": "^24.0.0"
+    "jsdom": "^24.0.0",
+    "playwright": "^1.43.1"
   },
   "devDependencies": {
     "typescript": "^5.4.5"
