@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "deploy": "npm run build && gcloud functions deploy notion-cookbook-fetcher --gen2 --runtime=nodejs20 --region=europe-west3 --source=. --entry-point=updateGET --trigger-http --allow-unauthenticated --set-secrets 'NOTION_ACCESS_TOKEN=notion-access-token:1'",
+    "deploy": "npm run build && gcloud functions deploy notion-cookbook-fetcher --gen2 --runtime=nodejs20 --region=europe-west3 --source=. --entry-point=updateGET --trigger-http --allow-unauthenticated --env-vars-file .env.yaml --set-secrets 'NOTION_ACCESS_TOKEN=notion-access-token:2'",
     "run": "npm run build && npx @google-cloud/functions-framework --target=updateGET",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prestart": "npm run build",
@@ -14,7 +14,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@google-cloud/functions-framework": "^3.3.0"
+    "@google-cloud/functions-framework": "^3.3.0",
+    "@notionhq/client": "^2.2.15",
+    "jsdom": "^24.0.0"
   },
   "devDependencies": {
     "typescript": "^5.4.5"

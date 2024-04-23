@@ -10,10 +10,11 @@ Setup gcloud
 
 Secrets
 * `gcloud secrets create notion-access-token --replication-policy="automatic"`
-* `gcloud secrets versions add notion-access-token --data-file="<file path e.g. /tmp/notion-access-token.txt>"`
+* `gcloud secrets versions add notion-access-token --data-file="<file path e.g. /tmp/notion-access-token.txt>"`(Be careful not to add a line break. Otherwise, you might see  an `not a legal HTTP header value` error.)
 * [Granting access to secrets](https://cloud.google.com/functions/docs/configuring/secrets#grant-access)
 
 Deploy
+* Create an environment file: `cp .env.yaml.example .env.yaml`
 * Start the deployment: `npm run deploy`
 
 ### Notes
