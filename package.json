@@ -2,15 +2,21 @@
   "name": "notion-cookbook-fetcher",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "deploy": "gcloud functions deploy notion-cookbook-fetcher --gen2 --runtime=nodejs20 --region=europe-west3 --source=. --entry-point=updateGET --trigger-http --allow-unauthenticated",
-    "run": "npx @google-cloud/functions-framework --target=updateGET",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "deploy": "npm run build && gcloud functions deploy notion-cookbook-fetcher --gen2 --runtime=nodejs20 --region=europe-west3 --source=. --entry-point=updateGET --trigger-http --allow-unauthenticated",
+    "run": "npm run build && npx @google-cloud/functions-framework --target=updateGET",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prestart": "npm run build",
+    "gcp-build": "npm run build"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@google-cloud/functions-framework": "^3.3.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
   }
 }
