@@ -4,8 +4,16 @@
 
 ### Deployment
 
+Setup gcloud
 * [Install the gcloud CLI](https://cloud.google.com/sdk/docs/install) and login: `gcloud auth login`
 * Set the default project: `gcloud config set project <PROJECT_ID>`
+
+Secrets
+* `gcloud secrets create notion-access-token --replication-policy="automatic"`
+* `gcloud secrets versions add notion-access-token --data-file="<file path e.g. /tmp/notion-access-token.txt>"`
+* [Granting access to secrets](https://cloud.google.com/functions/docs/configuring/secrets#grant-access)
+
+Deploy
 * Start the deployment: `npm run deploy`
 
 ### Notes

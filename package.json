@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "deploy": "npm run build && gcloud functions deploy notion-cookbook-fetcher --gen2 --runtime=nodejs20 --region=europe-west3 --source=. --entry-point=updateGET --trigger-http --allow-unauthenticated",
+    "deploy": "npm run build && gcloud functions deploy notion-cookbook-fetcher --gen2 --runtime=nodejs20 --region=europe-west3 --source=. --entry-point=updateGET --trigger-http --allow-unauthenticated --set-secrets 'NOTION_ACCESS_TOKEN=notion-access-token:1'",
     "run": "npm run build && npx @google-cloud/functions-framework --target=updateGET",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prestart": "npm run build",
