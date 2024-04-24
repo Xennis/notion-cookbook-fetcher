@@ -1,6 +1,7 @@
 import {Client, isFullBlock} from "@notionhq/client";
 import type {BlockObjectRequest, PageObjectResponse} from "@notionhq/client/build/src/api-endpoints";
 import type {UpdatePageParameters} from "@notionhq/client/build/src/api-endpoints";
+import {type BrowserContext} from "playwright";
 // @ts-ignore
 import jsdom from "jsdom";
 const { JSDOM } = jsdom;
@@ -35,9 +36,7 @@ const readRecipe = async (url: string) => {
 }
 
 const createPageParams = (pageId: string, coverUrl?: string, title?: string, subtitle?: string): UpdatePageParameters => {
-    let properties: UpdatePageParameters["properties"] = {
-        "Tags": [{name: "auto"}]
-    }
+    let properties: UpdatePageParameters["properties"] = {}
     if (title !== undefined) {
         properties["title"] = [{text: {content: title}}]
     }
@@ -46,7 +45,7 @@ const createPageParams = (pageId: string, coverUrl?: string, title?: string, sub
     }
     let data: UpdatePageParameters = {
         page_id: pageId,
-        properties: properties,
+        properties: Object.keys(properties).length > 0 ? properties : undefined,
     }
     if (coverUrl !== undefined) {
         data.cover = {external: {url: coverUrl}}
@@ -88,7 +87,7 @@ const createBlocks = (recipe: Recipe): Array<BlockObjectRequest> => {
     blocks.push({
         type: "heading_2",
         heading_2: {
-            rich_text: richTexts("Schritte")
+            rich_text: richTexts("Zubereitung")
         }
     })
     recipe.steps.forEach((step) => {
@@ -108,7 +107,7 @@ const createBlocks = (recipe: Recipe): Array<BlockObjectRequest> => {
     return blocks
 }
 
-export const processFn = async (client: Client, page: PageObjectResponse) => {
+export const processFn = async (client: Client, context: BrowserContext, page: PageObjectResponse) => {
     const url = propsUrl(page.properties, "Webseite")
     if (url === null) {
         return
@@ -135,11 +134,11 @@ export const processFn = async (client: Client, page: PageObjectResponse) => {
         const pageBlock = await client.blocks.retrieve({block_id: page.id})
         // 2) If page misses a page content try to add it
         if (isFullBlock(pageBlock) && !pageBlock.has_children) {
-            const contentData = await msFetchRecipe(url)
+            const contentData = await msFetchRecipe(context, url)
             // console.log(JSON.stringify(contentData))
             await client.blocks.children.append({block_id: page.id, children: createBlocks(contentData)})
-            if (contentData.subtitle !== null) {
-                await client.pages.update(createPageParams(page.id, undefined, undefined, subtitle !== null ? undefined : contentData.subtitle))
+            if (subtitle === null && contentData.subtitle !== null) {
+                await client.pages.update(createPageParams(page.id, undefined, undefined, contentData.subtitle))
             }
         }
     }

@@ -1,11 +1,9 @@
 // Requires: `npx playwright install` too
-import playwright from "playwright";
+import {type BrowserContext} from "playwright";
 import {Recipe, RecipeStep} from "./types";
 
 
-export const msFetchRecipe = async (url: string, timeoutMs: number = 1000): Promise<Recipe> => {
-    const browser = await playwright['chromium'].launch()
-    const context = await browser.newContext()
+export const msFetchRecipe = async (context: BrowserContext, url: string, timeoutMs: number = 1000): Promise<Recipe> => {
     const page = await context.newPage()
     await page.goto(url)
     await page.waitForTimeout(timeoutMs)
@@ -32,7 +30,6 @@ export const msFetchRecipe = async (url: string, timeoutMs: number = 1000): Prom
             return node.textContent;
         })),
     ])
-    await browser.close()
     return {
         subtitle: subtitle.length > 0 ? subtitle[0] : null,
         ingredients: ingredients.filter((i) => i !== null) as Array<string>,
